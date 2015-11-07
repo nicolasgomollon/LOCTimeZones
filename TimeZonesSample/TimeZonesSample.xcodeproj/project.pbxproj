@@ -12,6 +12,9 @@
 		DA91BCD51BEE65E400F3D466 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA91BCD41BEE65E400F3D466 /* MasterViewController.m */; };
 		DA91BCD81BEE65E400F3D466 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA91BCD71BEE65E400F3D466 /* DetailViewController.m */; };
 		DA91BCE81BEE66A900F3D466 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DA91BCE71BEE66A900F3D466 /* Images.xcassets */; };
+		DAE890A01BEE795400BE86F2 /* LTZLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE8909C1BEE795400BE86F2 /* LTZLocation.m */; };
+		DAE890A11BEE795400BE86F2 /* LTZTimeZones.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE8909E1BEE795400BE86F2 /* LTZTimeZones.m */; };
+		DAE890A21BEE795400BE86F2 /* timezones.json in Resources */ = {isa = PBXBuildFile; fileRef = DAE8909F1BEE795400BE86F2 /* timezones.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +28,11 @@
 		DA91BCD71BEE65E400F3D466 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		DA91BCE11BEE65E400F3D466 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA91BCE71BEE66A900F3D466 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		DAE8909B1BEE795400BE86F2 /* LTZLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LTZLocation.h; sourceTree = "<group>"; };
+		DAE8909C1BEE795400BE86F2 /* LTZLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LTZLocation.m; sourceTree = "<group>"; };
+		DAE8909D1BEE795400BE86F2 /* LTZTimeZones.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LTZTimeZones.h; sourceTree = "<group>"; };
+		DAE8909E1BEE795400BE86F2 /* LTZTimeZones.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LTZTimeZones.m; sourceTree = "<group>"; };
+		DAE8909F1BEE795400BE86F2 /* timezones.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = timezones.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +49,7 @@
 		DA91BCC11BEE65E400F3D466 = {
 			isa = PBXGroup;
 			children = (
+				DAE8909A1BEE795400BE86F2 /* LTZTimeZones */,
 				DA91BCCC1BEE65E400F3D466 /* TimeZonesSample */,
 				DA91BCCB1BEE65E400F3D466 /* Products */,
 			);
@@ -76,6 +85,19 @@
 				DA91BCCE1BEE65E400F3D466 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DAE8909A1BEE795400BE86F2 /* LTZTimeZones */ = {
+			isa = PBXGroup;
+			children = (
+				DAE8909D1BEE795400BE86F2 /* LTZTimeZones.h */,
+				DAE8909E1BEE795400BE86F2 /* LTZTimeZones.m */,
+				DAE8909B1BEE795400BE86F2 /* LTZLocation.h */,
+				DAE8909C1BEE795400BE86F2 /* LTZLocation.m */,
+				DAE8909F1BEE795400BE86F2 /* timezones.json */,
+			);
+			name = LTZTimeZones;
+			path = ../LTZTimeZones;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,6 +157,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DAE890A21BEE795400BE86F2 /* timezones.json in Resources */,
 				DA91BCE81BEE66A900F3D466 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -147,9 +170,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA91BCD21BEE65E400F3D466 /* AppDelegate.m in Sources */,
+				DAE890A01BEE795400BE86F2 /* LTZLocation.m in Sources */,
 				DA91BCD51BEE65E400F3D466 /* MasterViewController.m in Sources */,
 				DA91BCCF1BEE65E400F3D466 /* main.m in Sources */,
 				DA91BCD81BEE65E400F3D466 /* DetailViewController.m in Sources */,
+				DAE890A11BEE795400BE86F2 /* LTZTimeZones.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
