@@ -15,6 +15,7 @@
 		DAE890A01BEE795400BE86F2 /* LTZLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE8909C1BEE795400BE86F2 /* LTZLocation.m */; };
 		DAE890A11BEE795400BE86F2 /* LTZTimeZones.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE8909E1BEE795400BE86F2 /* LTZTimeZones.m */; };
 		DAE890A21BEE795400BE86F2 /* timezones.json in Resources */ = {isa = PBXBuildFile; fileRef = DAE8909F1BEE795400BE86F2 /* timezones.json */; };
+		DAE890A51BEEA9FA00BE86F2 /* LTZSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = DAE890A41BEEA9FA00BE86F2 /* LTZSearchController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,8 @@
 		DAE8909D1BEE795400BE86F2 /* LTZTimeZones.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LTZTimeZones.h; sourceTree = "<group>"; };
 		DAE8909E1BEE795400BE86F2 /* LTZTimeZones.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LTZTimeZones.m; sourceTree = "<group>"; };
 		DAE8909F1BEE795400BE86F2 /* timezones.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = timezones.json; sourceTree = "<group>"; };
+		DAE890A31BEEA9FA00BE86F2 /* LTZSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LTZSearchController.h; sourceTree = "<group>"; };
+		DAE890A41BEEA9FA00BE86F2 /* LTZSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LTZSearchController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +97,8 @@
 				DAE8909E1BEE795400BE86F2 /* LTZTimeZones.m */,
 				DAE8909B1BEE795400BE86F2 /* LTZLocation.h */,
 				DAE8909C1BEE795400BE86F2 /* LTZLocation.m */,
+				DAE890A31BEEA9FA00BE86F2 /* LTZSearchController.h */,
+				DAE890A41BEEA9FA00BE86F2 /* LTZSearchController.m */,
 				DAE8909F1BEE795400BE86F2 /* timezones.json */,
 			);
 			name = LTZTimeZones;
@@ -171,6 +176,7 @@
 			files = (
 				DA91BCD21BEE65E400F3D466 /* AppDelegate.m in Sources */,
 				DAE890A01BEE795400BE86F2 /* LTZLocation.m in Sources */,
+				DAE890A51BEEA9FA00BE86F2 /* LTZSearchController.m in Sources */,
 				DA91BCD51BEE65E400F3D466 /* MasterViewController.m in Sources */,
 				DA91BCCF1BEE65E400F3D466 /* main.m in Sources */,
 				DA91BCD81BEE65E400F3D466 /* DetailViewController.m in Sources */,

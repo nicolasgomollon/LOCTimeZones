@@ -8,6 +8,17 @@
 
 #import "LTZTimeZones.h"
 
+@interface LTZSearchableLocation : LTZLocation
+
+@property (nonatomic, strong) NSString *asciiCity;
+@property (nonatomic, strong) NSString *asciiCountry;
+@property (nonatomic, strong) NSString *searchable;
+
+@end
+
+@implementation LTZSearchableLocation
+@end
+
 @implementation LTZTimeZones
 
 + (LTZTimeZones *)sharedManager {
@@ -17,6 +28,11 @@
 	dispatch_once(&onceToken, ^{
 		sharedInstance = [[self alloc] init];
 		sharedInstance->timeZones = LTZTimeZones.timeZones;
+		sharedInstance->searchQueue = [[NSOperationQueue alloc] init];
+		sharedInstance->searchQueue.maxConcurrentOperationCount = 1;
+		if ([sharedInstance->searchQueue respondsToSelector:@selector(qualityOfService)]) {
+			sharedInstance->searchQueue.qualityOfService = NSQualityOfServiceUserInteractive;
+		}
 	});
 	
 	return sharedInstance;
@@ -33,67 +49,56 @@
 	NSInputStream *inputStream = [[NSInputStream alloc] initWithFileAtPath:filePath];
 	
 	[inputStream open];
-	id timeZones = [NSJSONSerialization JSONObjectWithStream:inputStream options:0 error:nil];
+	NSMutableArray *timeZones = [[NSMutableArray alloc] init];
+	for (NSDictionary *loc in [NSJSONSerialization JSONObjectWithStream:inputStream options:0 error:nil]) {
+		LTZSearchableLocation *location = [[LTZSearchableLocation alloc] init];
+		location.city = loc[@"name"];
+		location.state = loc[@"state_name"];
+		location.country = loc[@"country_name"];
+		location.stateAbbreviation = loc[@"state"];
+		location.countryCode = loc[@"country_code"];
+		location.timeZone = [NSTimeZone timeZoneWithName:loc[@"timezone"]];
+		location.asciiCity = loc[@"asciiname"];
+		location.asciiCountry = [loc[@"country_name"] stringByFoldingWithOptions:(NSDiacriticInsensitiveSearch | NSWidthInsensitiveSearch | NSCaseInsensitiveSearch)
+																		  locale:[NSLocale systemLocale]];
+		NSMutableArray *searchableLocArr = [[NSMutableArray alloc] init];
+		[searchableLocArr addObject:location.asciiCity];
+		if (location.state != nil) {
+			[searchableLocArr addObject:location.state];
+		}
+		[searchableLocArr addObject:location.asciiCountry];
+		location.searchable = [searchableLocArr componentsJoinedByString:@", "];
+		[timeZones addObject:location];
+	}
+	[timeZones sortUsingComparator:^NSComparisonResult(LTZLocation *obj1, LTZLocation *obj2) {
+		return [obj1.name compare:obj2.name];
+	}];
 	[inputStream close];
 	
 	return timeZones;
 }
 
-+ (void)timeZoneForLocation:(NSString *)search completionHandler:(void (^)(NSString *search, NSArray *locations))completionHandler {
-	[[NSBlockOperation blockOperationWithBlock:^{
++ (NSOperation *)timeZoneForLocation:(NSString *)search completionHandler:(void (^)(NSString *search, NSArray *locations))completionHandler {
+	NSOperation *searchOperation = [NSBlockOperation blockOperationWithBlock:^{
 		NSString *asciiSearch = [search stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		asciiSearch = [asciiSearch stringByReplacingOccurrencesOfString:@"Æ" withString:@"AE"];
 		asciiSearch = [asciiSearch stringByReplacingOccurrencesOfString:@"æ" withString:@"ae"];
 		asciiSearch = [asciiSearch stringByReplacingOccurrencesOfString:@"Œ" withString:@"OE"];
 		asciiSearch = [asciiSearch stringByReplacingOccurrencesOfString:@"œ" withString:@"oe"];
 		asciiSearch = [asciiSearch stringByReplacingOccurrencesOfString:@"ĳ" withString:@"ij"];
-		asciiSearch = [asciiSearch stringByFoldingWithOptions:(NSDiacriticInsensitiveSearch | NSWidthInsensitiveSearch | NSCaseInsensitiveSearch)
-													   locale:[NSLocale systemLocale]];
 		
-		NSString *regexSearch = [@"\\b" stringByAppendingString:asciiSearch];
+		NSString *pattern = [@".*\\b" stringByAppendingString:asciiSearch];
+		pattern = [pattern stringByAppendingString:@".*"];
 		
-		NSMutableArray *locations = [[NSMutableArray alloc] init];
-		for (NSDictionary *loc in [LTZTimeZones sharedManager]->timeZones) {
-			NSString *asciiName = loc[@"asciiname"];
-			NSString *stateAbbr = loc[@"state"];
-			NSString *stateName = loc[@"state_name"];
-			NSString *countryName = loc[@"country_name"];
-			BOOL match = NO;
-			if (asciiSearch.length <= 2) {
-				if (stateAbbr != nil) {
-					match = ([stateAbbr rangeOfString:regexSearch options:(NSCaseInsensitiveSearch | NSRegularExpressionSearch)].location != NSNotFound);
-				}
-			} else {
-				match = ([asciiName rangeOfString:regexSearch options:(NSCaseInsensitiveSearch | NSRegularExpressionSearch)].location != NSNotFound);
-				if (!match && (stateName != nil)) {
-					match = ([stateName rangeOfString:regexSearch options:(NSCaseInsensitiveSearch | NSRegularExpressionSearch)].location != NSNotFound);
-				}
-				if (!match) {
-					NSString *asciiCountryName = [countryName stringByFoldingWithOptions:(NSDiacriticInsensitiveSearch | NSWidthInsensitiveSearch | NSCaseInsensitiveSearch)
-																				  locale:[NSLocale systemLocale]];
-					match = ([asciiCountryName rangeOfString:regexSearch options:(NSCaseInsensitiveSearch | NSRegularExpressionSearch)].location != NSNotFound);
-				}
-			}
-			if (match) {
-				LTZLocation *location = [[LTZLocation alloc] init];
-				location.city = loc[@"name"];
-				location.state = stateName;
-				location.country = countryName;
-				location.stateAbbreviation = stateAbbr;
-				location.countryCode = loc[@"country_code"];
-				location.timeZone = [NSTimeZone timeZoneWithName:loc[@"timezone"]];
-				[locations addObject:location];
-			}
-		}
-		
-		[locations sortUsingComparator:^NSComparisonResult(LTZLocation *obj1, LTZLocation *obj2) {
-			return [obj1.name compare:obj2.name];
-		}];
+		NSPredicate *locationPredicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"searchable", pattern];
+		NSArray *locations = [[LTZTimeZones sharedManager]->timeZones filteredArrayUsingPredicate:locationPredicate];
 		
 		if (completionHandler != nil) {
 			completionHandler(search, locations);
 		}
-	}] start];
+	}];
+	[[LTZTimeZones sharedManager]->searchQueue addOperation:searchOperation];
+	return searchOperation;
 }
 
 @end

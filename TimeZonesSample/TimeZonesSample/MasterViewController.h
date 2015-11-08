@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "LTZSearchController.h"
 
-@class DetailViewController;
-
-@interface MasterViewController : UITableViewController {
-	NSMutableArray *objects;
+@interface MasterViewController : UIViewController <LTZSearchDelegate> {
+	UILabel *selectionLabel;
 }
 
 @end

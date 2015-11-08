@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import "MasterViewController.h"
+#import "LTZTimeZones.h"
 
 @implementation AppDelegate
 
@@ -23,6 +24,10 @@
 	
 	// Display the window.
 	[self.window makeKeyAndVisible];
+	
+	dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0ul), ^{
+		[LTZTimeZones sharedManager];
+	});
 	
 	return YES;
 }

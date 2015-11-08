@@ -15,7 +15,7 @@
 	
 	self.view.backgroundColor = [UIColor whiteColor];
 	
-	detailDescriptionLabel = [[UILabel alloc] initWithFrame:self.view.frame];
+	detailDescriptionLabel = [[UILabel alloc] initWithFrame:self.view.bounds];
 	detailDescriptionLabel.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
 	detailDescriptionLabel.font = [UIFont systemFontOfSize:17.0f];
 	detailDescriptionLabel.textAlignment = NSTextAlignmentCenter;

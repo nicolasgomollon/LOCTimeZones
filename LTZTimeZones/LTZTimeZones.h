@@ -11,9 +11,10 @@
 
 @interface LTZTimeZones : NSObject {
 	NSArray *timeZones;
+	NSOperationQueue *searchQueue;
 }
 
 + (LTZTimeZones *)sharedManager;
-+ (void)timeZoneForLocation:(NSString *)search completionHandler:(void (^)(NSString *search, NSArray *locations))completionHandler;
++ (NSOperation *)timeZoneForLocation:(NSString *)search completionHandler:(void (^)(NSString *search, NSArray *locations))completionHandler;
 
 @end
