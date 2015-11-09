@@ -81,6 +81,7 @@
 + (NSOperation *)timeZoneForLocation:(NSString *)search completionHandler:(void (^)(NSString *search, NSArray *locations))completionHandler {
 	NSOperation *searchOperation = [NSBlockOperation blockOperationWithBlock:^{
 		NSString *asciiSearch = [search stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		asciiSearch = [asciiSearch stringByReplacingOccurrencesOfString:@"\\s+" withString:@" " options:NSRegularExpressionSearch range:NSMakeRange(0, asciiSearch.length)];
 		asciiSearch = [asciiSearch stringByReplacingOccurrencesOfString:@"Æ" withString:@"AE"];
 		asciiSearch = [asciiSearch stringByReplacingOccurrencesOfString:@"æ" withString:@"ae"];
 		asciiSearch = [asciiSearch stringByReplacingOccurrencesOfString:@"Œ" withString:@"OE"];
@@ -91,7 +92,10 @@
 		pattern = [pattern stringByAppendingString:@".*"];
 		
 		NSPredicate *locationPredicate = [NSPredicate predicateWithFormat:@"%K MATCHES[cd] %@", @"searchable", pattern];
-		NSArray *locations = [[LTZTimeZones sharedManager]->timeZones filteredArrayUsingPredicate:locationPredicate];
+		NSArray *locations = nil;
+		if (asciiSearch.length > 0) {
+			locations = [[LTZTimeZones sharedManager]->timeZones filteredArrayUsingPredicate:locationPredicate];
+		}
 		
 		if (completionHandler != nil) {
 			completionHandler(search, locations);
