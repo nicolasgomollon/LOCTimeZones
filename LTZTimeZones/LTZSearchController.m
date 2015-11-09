@@ -17,12 +17,21 @@
 	self.title = NSLocalizedString(@"Time Zone", nil);
 	self.view.backgroundColor = [UIColor whiteColor];
 	
-	searchBar = [[UIView alloc] initWithFrame:CGRectZero];
-	searchBar.backgroundColor = [UIColor colorWithRed:200.0f/255.0f green:200.0f/255.0f blue:205.0f/255.0f alpha:1.0f];
+	searchBar = [[UISearchBar alloc] initWithFrame:CGRectZero];
+	searchBar.autocapitalizationType = UITextAutocapitalizationTypeWords;
+	searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
+	searchBar.barStyle = UIBarStyleDefault;
+	searchBar.delegate = self;
+	searchBar.keyboardAppearance = UIKeyboardAppearanceDefault;
+	searchBar.keyboardType = UIKeyboardTypeDefault;
+	searchBar.placeholder = NSLocalizedString(@"Search", nil);
+	searchBar.prompt = NSLocalizedString(@"Enter a city name.", nil);
+	searchBar.returnKeyType = UIReturnKeySearch;
+	searchBar.searchBarStyle = UISearchBarStyleDefault;
 	searchBar.translatesAutoresizingMaskIntoConstraints = NO;
 	[self.view addSubview:searchBar];
 	
-	[self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][searchBar(44.0)]"
+	[self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[topLayoutGuide][searchBar(68.0)]"
 																	  options:0
 																	  metrics:nil
 																		views:@{@"topLayoutGuide": self.topLayoutGuide, @"searchBar": searchBar}]];
@@ -31,44 +40,6 @@
 																	  options:0
 																	  metrics:nil
 																		views:@{@"searchBar": searchBar}]];
-	
-	searchBarHighlight = [[UIView alloc] initWithFrame:CGRectZero];
-	searchBarHighlight.backgroundColor = [UIColor colorWithRed:180.0f/255.0f green:180.0f/255.0f blue:181.0f/255.0f alpha:1.0f];
-	searchBarHighlight.translatesAutoresizingMaskIntoConstraints = NO;
-	[searchBar addSubview:searchBarHighlight];
-	
-	[searchBar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[highlight(0.5)]|"
-																	  options:0
-																	  metrics:nil
-																		views:@{@"highlight": searchBarHighlight}]];
-	
-	[searchBar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[highlight]|"
-																	  options:0
-																	  metrics:nil
-																		views:@{@"highlight": searchBarHighlight}]];
-	
-	searchField = [[UITextField alloc] initWithFrame:CGRectZero];
-	searchField.autocapitalizationType = UITextAutocapitalizationTypeSentences;
-	searchField.autocorrectionType = UITextAutocorrectionTypeNo;
-	searchField.borderStyle = UITextBorderStyleRoundedRect;
-	searchField.clearButtonMode = UITextFieldViewModeAlways;
-	searchField.delegate = self;
-	searchField.keyboardAppearance = UIKeyboardAppearanceDefault;
-	searchField.keyboardType = UIKeyboardTypeDefault;
-	searchField.placeholder = NSLocalizedString(@"Enter a city name", nil);
-	searchField.returnKeyType = UIReturnKeySearch;
-	searchField.translatesAutoresizingMaskIntoConstraints = NO;
-	[searchBar addSubview:searchField];
-	
-	[searchBar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[searchField]-|"
-																	  options:0
-																	  metrics:nil
-																		views:@{@"searchField": searchField}]];
-	
-	[searchBar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[searchField]-|"
-																	  options:0
-																	  metrics:nil
-																		views:@{@"searchField": searchField}]];
 	
 	tableView = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
 	tableView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
@@ -109,7 +80,7 @@
 												 name:UIKeyboardWillChangeFrameNotification
 											   object:nil];
 	
-	[searchField becomeFirstResponder];
+	[searchBar becomeFirstResponder];
 }
 
 - (void)dealloc {
@@ -143,16 +114,15 @@
 	}];
 }
 
-#pragma mark - UITextFieldDelegate
+#pragma mark - UISearchBarDelegate
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-	NSString *text = [textField.text stringByReplacingCharactersInRange:range withString:string];
+- (void)searchBar:(UISearchBar *)_searchBar textDidChange:(NSString *)searchText {
 	[searchOperation cancel];
-	if (text.length > 0) {
-		searchOperation = [LTZTimeZones timeZoneForLocation:text completionHandler:^(NSString *search, NSArray *locations) {
+	if (searchText.length > 0) {
+		searchOperation = [LTZTimeZones timeZoneForLocation:searchText completionHandler:^(NSString *search, NSArray *locations) {
 			searchOperation = nil;
 			dispatch_async(dispatch_get_main_queue(), ^{
-				if (textField.text.length > 0) {
+				if (_searchBar.text.length > 0) {
 					results = locations;
 					[tableView reloadData];
 				} else {
@@ -165,19 +135,6 @@
 		results = nil;
 		[tableView reloadData];
 	}
-	return YES;
-}
-
-- (BOOL)textFieldShouldClear:(UITextField *)textField {
-	[searchOperation cancel];
-	results = nil;
-	[tableView reloadData];
-	return YES;
-}
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-	[textField resignFirstResponder];
-	return YES;
 }
 
 #pragma mark - UITableViewDataSource

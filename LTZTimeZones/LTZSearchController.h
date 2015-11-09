@@ -16,10 +16,8 @@
 
 @end
 
-@interface LTZSearchController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate> {
-	UIView *searchBar;
-	UIView *searchBarHighlight;
-	UITextField *searchField;
+@interface LTZSearchController : UIViewController <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate> {
+	UISearchBar *searchBar;
 	UITableView *tableView;
 	NSOperation *searchOperation;
 	NSArray *results;
