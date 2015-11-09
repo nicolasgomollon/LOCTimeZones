@@ -8,6 +8,7 @@
 
 #import "LTZSearchController.h"
 #import "LTZTimeZones.h"
+#import "LTZSearchCell.h"
 
 @implementation LTZSearchController
 
@@ -58,13 +59,18 @@
 																	  metrics:nil
 																		views:@{@"tableView": tableView}]];
 	
-	[tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+	[tableView registerClass:[LTZSearchCell class] forCellReuseIdentifier:@"LTZSearchCell"];
 }
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
 	
 	// Do any additional setup after loading the view.
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(didChangePreferredContentSize:)
+												 name:UIContentSizeCategoryDidChangeNotification
+											   object:nil];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(keyboardWillShow:)
 												 name:UIKeyboardWillShowNotification
@@ -90,6 +96,10 @@
 - (void)didReceiveMemoryWarning {
 	[super didReceiveMemoryWarning];
 	// Dispose of any resources that can be recreated.
+}
+
+- (void)didChangePreferredContentSize:(NSNotification *)notification {
+	[tableView reloadData];
 }
 
 - (void)keyboardWillShow:(NSNotification *)notification {
@@ -147,12 +157,13 @@
 	return results.count;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+	return LTZSearchCell.preferredHeight;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)_tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	UITableViewCell *cell = [_tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
-	
-	LTZLocation *location = results[indexPath.row];
-	cell.textLabel.text = location.name;
-	
+	LTZSearchCell *cell = [_tableView dequeueReusableCellWithIdentifier:@"LTZSearchCell" forIndexPath:indexPath];
+	cell.location = results[indexPath.row];
 	return cell;
 }
 

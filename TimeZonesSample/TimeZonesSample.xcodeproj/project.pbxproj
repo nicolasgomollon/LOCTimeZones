@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DA0DD8391BF11F140002A686 /* LTZSearchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = DA0DD8381BF11F140002A686 /* LTZSearchCell.m */; };
 		DA91BCCF1BEE65E400F3D466 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DA91BCCE1BEE65E400F3D466 /* main.m */; };
 		DA91BCD21BEE65E400F3D466 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DA91BCD11BEE65E400F3D466 /* AppDelegate.m */; };
 		DA91BCD51BEE65E400F3D466 /* MasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DA91BCD41BEE65E400F3D466 /* MasterViewController.m */; };
@@ -19,6 +20,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DA0DD8371BF11F140002A686 /* LTZSearchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LTZSearchCell.h; sourceTree = "<group>"; };
+		DA0DD8381BF11F140002A686 /* LTZSearchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LTZSearchCell.m; sourceTree = "<group>"; };
 		DA91BCCA1BEE65E400F3D466 /* TimeZonesSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TimeZonesSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA91BCCE1BEE65E400F3D466 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		DA91BCD01BEE65E400F3D466 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -100,6 +103,8 @@
 				DAE890A31BEEA9FA00BE86F2 /* LTZSearchController.h */,
 				DAE890A41BEEA9FA00BE86F2 /* LTZSearchController.m */,
 				DAE8909F1BEE795400BE86F2 /* timezones.json */,
+				DA0DD8371BF11F140002A686 /* LTZSearchCell.h */,
+				DA0DD8381BF11F140002A686 /* LTZSearchCell.m */,
 			);
 			name = LTZTimeZones;
 			path = ../LTZTimeZones;
@@ -176,6 +181,7 @@
 			files = (
 				DA91BCD21BEE65E400F3D466 /* AppDelegate.m in Sources */,
 				DAE890A01BEE795400BE86F2 /* LTZLocation.m in Sources */,
+				DA0DD8391BF11F140002A686 /* LTZSearchCell.m in Sources */,
 				DAE890A51BEEA9FA00BE86F2 /* LTZSearchController.m in Sources */,
 				DA91BCD51BEE65E400F3D466 /* MasterViewController.m in Sources */,
 				DA91BCCF1BEE65E400F3D466 /* main.m in Sources */,
