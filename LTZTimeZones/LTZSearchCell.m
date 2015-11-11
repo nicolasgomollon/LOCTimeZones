@@ -13,7 +13,7 @@
 @synthesize location, titleLabel, subtitleLabel, detailLabel;
 
 + (CGFloat)preferredHeight {
-	return [UIFont preferredFontForTextStyle:UIFontTextStyleBody].pointSize + [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1].pointSize + 15.0f;
+	return [UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize + [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1].pointSize + 15.0f;
 }
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
@@ -30,55 +30,94 @@
 																				 metrics:nil
 																				   views:@{@"titleLabel": self.titleLabel}]];
 		
-		titleLabelConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
-															attribute:NSLayoutAttributeHeight
-															relatedBy:NSLayoutRelationEqual
-															   toItem:nil
-															attribute:0
-														   multiplier:1.0f
-															 constant:(self.titleLabel.font.pointSize + 11.0f)];
+		titleLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
+																  attribute:NSLayoutAttributeHeight
+																  relatedBy:NSLayoutRelationEqual
+																	 toItem:nil
+																  attribute:NSLayoutAttributeNotAnAttribute
+																 multiplier:1.0f
+																   constant:(self.titleLabel.font.pointSize + 11.0f)];
 		
-		[self.contentView addConstraint:titleLabelConstraint];
+		[self.contentView addConstraint:titleLabelHeightConstraint];
 		
-		[self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[titleLabel]-[detailLabel]-|"
-																				 options:0
-																				 metrics:nil
-																				   views:@{@"titleLabel": self.titleLabel, @"detailLabel": self.detailLabel}]];
+		titleLabelLeftConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
+																attribute:NSLayoutAttributeLeft
+																relatedBy:NSLayoutRelationEqual
+																   toItem:self.contentView
+																attribute:NSLayoutAttributeLeft
+															   multiplier:1.0f
+																 constant:0.0f];
+		
+		[self.contentView addConstraint:titleLabelLeftConstraint];
 		
 		[self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[subtitleLabel]|"
 																				 options:0
 																				 metrics:nil
 																				   views:@{@"subtitleLabel": self.subtitleLabel}]];
 		
-		subtitleLabelConstraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel
-															   attribute:NSLayoutAttributeHeight
-															   relatedBy:NSLayoutRelationEqual
-															   toItem:nil
-															   attribute:0
-														   multiplier:1.0f
-															 constant:(self.subtitleLabel.font.pointSize + 12.0f)];
+		[self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.subtitleLabel
+																	 attribute:NSLayoutAttributeLeft
+																	 relatedBy:NSLayoutRelationEqual
+																		toItem:self.titleLabel
+																	 attribute:NSLayoutAttributeLeft
+																	multiplier:1.0f
+																	  constant:0.0f]];
 		
-		[self.contentView addConstraint:subtitleLabelConstraint];
+		subtitleLabelHeightConstraint = [NSLayoutConstraint constraintWithItem:self.subtitleLabel
+																	 attribute:NSLayoutAttributeHeight
+																	 relatedBy:NSLayoutRelationEqual
+																		toItem:nil
+																	 attribute:NSLayoutAttributeNotAnAttribute
+																	multiplier:1.0f
+																	  constant:(self.subtitleLabel.font.pointSize + 12.0f)];
 		
-		[self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[subtitleLabel]-[detailLabel]-|"
-																				 options:0
-																				 metrics:nil
-																				   views:@{@"subtitleLabel": self.subtitleLabel, @"detailLabel": self.detailLabel}]];
+		[self.contentView addConstraint:subtitleLabelHeightConstraint];
 		
 		[self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[detailLabel]|"
 																				 options:0
 																				 metrics:nil
 																				   views:@{@"detailLabel": self.detailLabel}]];
 		
-		detailLabelConstraint = [NSLayoutConstraint constraintWithItem:self.detailLabel
-															 attribute:NSLayoutAttributeWidth
-															 relatedBy:NSLayoutRelationEqual
-																toItem:nil
-															 attribute:0
-															multiplier:1.0f
-															  constant:0.0f];
+		detailLabelWidthConstraint = [NSLayoutConstraint constraintWithItem:self.detailLabel
+																  attribute:NSLayoutAttributeWidth
+																  relatedBy:NSLayoutRelationEqual
+																	 toItem:nil
+																  attribute:NSLayoutAttributeNotAnAttribute
+																 multiplier:1.0f
+																   constant:0.0f];
 		
-		[self.contentView addConstraint:detailLabelConstraint];
+		[self.contentView addConstraint:detailLabelWidthConstraint];
+		
+		detailLabelRightConstraint = [NSLayoutConstraint constraintWithItem:self.detailLabel
+																  attribute:NSLayoutAttributeRight
+																  relatedBy:NSLayoutRelationEqual
+																	 toItem:self.contentView
+																  attribute:NSLayoutAttributeRight
+																 multiplier:1.0f
+																   constant:0.0f];
+		
+		[self.contentView addConstraint:detailLabelRightConstraint];
+		
+		titleLabelRightConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel
+																 attribute:NSLayoutAttributeRight
+																 relatedBy:NSLayoutRelationEqual
+																	toItem:self.detailLabel
+																 attribute:NSLayoutAttributeLeft
+																multiplier:1.0f
+																  constant:0.0f];
+		
+		[self.contentView addConstraint:titleLabelRightConstraint];
+		
+		[self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.subtitleLabel
+																	 attribute:NSLayoutAttributeRight
+																	 relatedBy:NSLayoutRelationEqual
+																		toItem:self.titleLabel
+																	 attribute:NSLayoutAttributeRight
+																	multiplier:1.0f
+																	  constant:0.0f]];
+		
+		// This is an ugly hack to force `textLabel` to set an x origin in `layoutSubviews`.
+		self.textLabel.text = @" ";
 	}
 	return self;
 }
@@ -86,18 +125,24 @@
 - (void)layoutSubviews {
 	[super layoutSubviews];
 	
-	self.titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+	self.titleLabel.font = [UIFont systemFontOfSize:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
 	self.subtitleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleCaption1];
-	self.detailLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+	self.detailLabel.font = [UIFont systemFontOfSize:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
 	
 	CGSize detailTextSize = [self.detailLabel.text boundingRectWithSize:self.contentView.frame.size
 																options:NSStringDrawingUsesLineFragmentOrigin
 															 attributes:@{NSFontAttributeName: self.detailLabel.font}
 																context:nil].size;
 	
-	detailLabelConstraint.constant = ceil(detailTextSize.width);
-	titleLabelConstraint.constant = (self.titleLabel.font.pointSize + 11.0f);
-	subtitleLabelConstraint.constant = (self.subtitleLabel.font.pointSize + 12.0f);
+	detailLabelWidthConstraint.constant = ceil(detailTextSize.width);
+	titleLabelHeightConstraint.constant = (self.titleLabel.font.pointSize + 11.0f);
+	subtitleLabelHeightConstraint.constant = (self.subtitleLabel.font.pointSize + 12.0f);
+	
+	if (self.textLabel.frame.origin.x > 0.0f) {
+		titleLabelLeftConstraint.constant = self.textLabel.frame.origin.x;
+		titleLabelRightConstraint.constant = -self.textLabel.frame.origin.x;
+		detailLabelRightConstraint.constant = -self.textLabel.frame.origin.x;
+	}
 }
 
 - (void)prepareForReuse {
@@ -122,7 +167,7 @@
 		titleLabel.backgroundColor = [UIColor clearColor];
 		titleLabel.textAlignment = NSTextAlignmentLeft;
 		titleLabel.textColor = [UIColor blackColor];
-		titleLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+		titleLabel.font = [UIFont systemFontOfSize:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
 		titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
 		[self.contentView addSubview:titleLabel];
 	}
@@ -148,7 +193,7 @@
 		detailLabel.backgroundColor = [UIColor clearColor];
 		detailLabel.textAlignment = NSTextAlignmentRight;
 		detailLabel.textColor = [UIColor colorWithRed:142.0f/255.0f green:142.0f/255.0f blue:147.0f/255.0f alpha:1.0f];
-		detailLabel.font = [UIFont preferredFontForTextStyle:UIFontTextStyleBody];
+		detailLabel.font = [UIFont systemFontOfSize:[UIFont preferredFontForTextStyle:UIFontTextStyleHeadline].pointSize];
 		detailLabel.translatesAutoresizingMaskIntoConstraints = NO;
 		[self.contentView addSubview:detailLabel];
 	}

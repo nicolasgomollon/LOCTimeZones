@@ -10,9 +10,12 @@
 #import "LTZLocation.h"
 
 @interface LTZSearchCell : UITableViewCell {
-	NSLayoutConstraint *titleLabelConstraint;
-	NSLayoutConstraint *subtitleLabelConstraint;
-	NSLayoutConstraint *detailLabelConstraint;
+	NSLayoutConstraint *titleLabelHeightConstraint;
+	NSLayoutConstraint *titleLabelLeftConstraint;
+	NSLayoutConstraint *titleLabelRightConstraint;
+	NSLayoutConstraint *subtitleLabelHeightConstraint;
+	NSLayoutConstraint *detailLabelWidthConstraint;
+	NSLayoutConstraint *detailLabelRightConstraint;
 }
 
 @property (nonatomic, strong) LTZLocation *location;
