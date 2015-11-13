@@ -66,6 +66,11 @@
 	[super viewDidLoad];
 	
 	// Do any additional setup after loading the view.
+	[[NSNotificationCenter defaultCenter] addObserver:tableView
+											 selector:@selector(reloadData)
+												 name:UIApplicationDidBecomeActiveNotification
+											   object:nil];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(didChangePreferredContentSize:)
 												 name:UIContentSizeCategoryDidChangeNotification
@@ -90,6 +95,7 @@
 }
 
 - (void)dealloc {
+	[[NSNotificationCenter defaultCenter] removeObserver:tableView];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
